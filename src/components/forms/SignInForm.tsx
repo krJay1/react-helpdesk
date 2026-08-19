@@ -26,6 +26,8 @@ import { Input } from "@/components/ui/input"
 import { USEREMAILCOOKIE } from "@/appConsts"
 import Cookies from 'js-cookie'
 import { useNavigate, type NavigateFunction } from "react-router"
+import axios from "axios";
+import { AppConfig } from "@/config/config"
 
 const formSchema = z.object({
     email: z
@@ -52,8 +54,18 @@ const SignInForm = () => {
     const { register, handleSubmit, formState } = form;
     const { errors } = formState;
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
+    async function onSubmit(data: z.infer<typeof formSchema>) {
         Cookies.set(USEREMAILCOOKIE, data.email)
+        try{
+            const response = await axios.post<any>(`${AppConfig.backendBaseUrl}/api/v1/login`, data)
+            console.log("response", response)
+        } catch (error) {
+            console.error("Error during login:", error);
+            toast.info("Login failed. Please check your credentials and try again.");
+            return;
+        }
+
+
 
         toast("You submitted the following values:", {
             description: (
@@ -61,7 +73,7 @@ const SignInForm = () => {
                     <code>{JSON.stringify(data, null, 2)}</code>
                 </pre>
             ),
-            position: "top-right",
+            position: "top-center",
             classNames: {
                 content: "flex flex-col gap-2",
             },
