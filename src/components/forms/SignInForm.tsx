@@ -57,7 +57,7 @@ const SignInForm = () => {
     async function onSubmit(data: z.infer<typeof formSchema>) {
         Cookies.set(USEREMAILCOOKIE, data.email)
         try{
-            const response = await axios.post<any>(`${AppConfig.backendBaseUrl}/api/login`, data)
+            const response = await axios.post<any>(`${AppConfig.backendBaseUrl}/api/v1/login`, data)
             console.log("response", response)
         } catch (error) {
             console.error("Error during login:", error);
