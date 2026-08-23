@@ -50,11 +50,12 @@ const SignUpForm = ({ signIn }: { signIn: () => void }) => {
     async function onSubmit(data: z.infer<typeof formSchema>) {
             const { firstName, lastName, email, mobile } = data;
             const payload = {
-                firstName,
-                lastName,
+                "first_name":firstName,
+                "last_name":lastName,
                 email,
-                mobile
+                "mobile_number":mobile
             };
+            
             // Handle form submission logic here
             console.log("Form submitted:", data, payload);
 
