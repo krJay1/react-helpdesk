@@ -28,6 +28,8 @@ import Cookies from 'js-cookie'
 import { useNavigate, type NavigateFunction } from "react-router"
 import axios from "axios";
 import { AppConfig } from "@/config/config"
+import { useState } from "react"
+import SignUpForm from "./SignUpForm"
 
 const formSchema = z.object({
     email: z
@@ -40,6 +42,8 @@ const formSchema = z.object({
 })
 
 const SignInForm = () => {
+    
+    const [isSignup, setIsSignup] = useState(false);
 
     const navigate: NavigateFunction = useNavigate()
 
@@ -65,8 +69,6 @@ const SignInForm = () => {
             return;
         }
 
-
-
         toast("You submitted the following values:", {
             description: (
                 <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-black p-4 text-code-foreground">
@@ -83,72 +85,80 @@ const SignInForm = () => {
         })
         navigate("/", {replace:true})
     }
+
     return (
-        <Card className="w-full max-w-sm">
-            <CardHeader>
-                <CardTitle>Login to your account</CardTitle>
-                <CardDescription>
-                    Enter your email below to login to your account
-                </CardDescription>
-                <CardAction>
-                    <Button variant="link">Sign Up</Button>
-                </CardAction>
-            </CardHeader>
-            <CardContent>
-                <form id="hd-login-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FieldGroup>
-                        <Field data-invalid={!!errors.email}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                                Email
-                            </FieldLabel>
-                            <Input
-                                {...register("email")}
-                                id="form-rhf-demo-title"
-                                aria-invalid={!!errors.email}
-                                placeholder="Enter email address"
-                                autoComplete="off"
-                            />
+        <>
+            {isSignup && <SignUpForm signIn={()=>setIsSignup(prev => !prev)}/>}
+            {!isSignup &&
+                <Card className="w-full max-w-sm">
+                    <CardHeader>
+                        <CardTitle>Login to your account</CardTitle>
+                        <CardDescription>
+                            Enter your email below to login to your account
+                        </CardDescription>
+                        <CardAction>
+                            <Button variant="link" onClick={() => setIsSignup(prev => !prev)}>
+                                Sign Up
+                            </Button>
+                        </CardAction>
+                    </CardHeader>
+                    <CardContent>
+                        <form id="hd-login-form" onSubmit={handleSubmit(onSubmit)}>
+                            <FieldGroup>
+                                <Field data-invalid={!!errors.email}>
+                                    <FieldLabel htmlFor="form-rhf-demo-title">
+                                        Email
+                                    </FieldLabel>
+                                    <Input
+                                        {...register("email")}
+                                        id="form-rhf-demo-title"
+                                        aria-invalid={!!errors.email}
+                                        placeholder="Enter email address"
+                                        autoComplete="off"
+                                    />
 
-                            {errors.email && (
-                                <FieldError errors={[errors.email]} />
-                            )}
+                                    {errors.email && (
+                                        <FieldError errors={[errors.email]} />
+                                    )}
+                                </Field>
+                                <Field data-invalid={!!errors.password}>
+                                    <FieldLabel htmlFor="form-rhf-demo-title">
+                                        Password
+                                    </FieldLabel>
+                                    <Input
+                                    {...register("password", {
+                                            onChange: (e) => {
+                                            e.target.value = e.target.value.replace(/\s/g, "");
+                                            },
+                                        })}
+                                        id="form-rhf-demo-title"
+                                        aria-invalid={!!errors.password}
+                                        placeholder="Enter password"
+                                        autoComplete="off"
+                                        maxLength={32}
+
+                                    />
+
+                                    {errors.password && (
+                                        <FieldError errors={[errors.password]} />
+                                    )}
+                                </Field>
+                            </FieldGroup>
+                        </form>
+                    </CardContent>
+                    <CardFooter>
+                        <Field>
+                            <Button variant="default" type="submit" form="hd-login-form">
+                                Submit
+                            </Button>
+                            <Button type="button" variant="outline" onClick={() => form.reset()}>
+                                Reset
+                            </Button>
                         </Field>
-                        <Field data-invalid={!!errors.password}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                                Password
-                            </FieldLabel>
-                            <Input
-                               {...register("password", {
-                                    onChange: (e) => {
-                                    e.target.value = e.target.value.replace(/\s/g, "");
-                                    },
-                                })}
-                                id="form-rhf-demo-title"
-                                aria-invalid={!!errors.password}
-                                placeholder="Enter password"
-                                autoComplete="off"
-                                maxLength={32}
-
-                            />
-
-                            {errors.password && (
-                                <FieldError errors={[errors.password]} />
-                            )}
-                        </Field>
-                    </FieldGroup>
-                </form>
-            </CardContent>
-            <CardFooter>
-                <Field>
-                    <Button variant="default" type="submit" form="hd-login-form">
-                        Submit
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => form.reset()}>
-                        Reset
-                    </Button>
-                </Field>
-            </CardFooter>
-        </Card>
+                    </CardFooter>
+                </Card>
+            }
+        </>
 
     )
 }
