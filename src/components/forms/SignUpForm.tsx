@@ -55,7 +55,7 @@ const SignUpForm = ({ signIn }: { signIn: () => void }) => {
                 email,
                 "mobile_number":mobile
             };
-            
+
             // Handle form submission logic here
             console.log("Form submitted:", data, payload);
 
@@ -76,22 +76,6 @@ const SignUpForm = ({ signIn }: { signIn: () => void }) => {
             <CardContent>
                 <form id="hd-signup-form" onSubmit={handleSubmit(onSubmit)}>
                     <FieldGroup>
-                        <Field data-invalid={!!errors.email}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                                Email
-                            </FieldLabel>
-                            <Input
-                                {...register("email")}
-                                id="form-rhf-demo-title"
-                                aria-invalid={!!errors.email}
-                                placeholder="Enter email address"
-                                autoComplete="off"
-                            />
-
-                            {errors.email && (
-                                <FieldError errors={[errors.email]} />
-                            )}
-                        </Field>
                         <Field data-invalid={!!errors.firstName}>
                             <FieldLabel htmlFor="form-rhf-demo-title">
                                 First Name
